@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "../Lexer/Lexer.h"
-#include "../Parser/Parser.h"
-#include "../AST/AST.h"
+#include "../CompilerPrototype/Lexer/Lexer.h"
+#include "../CompilerPrototype/Parser/Parser.h"
+#include "../CompilerPrototype/AST/AST.h"
 
 // Wczytaj pliki z listy
 std::vector<std::string> readSourcesList(const std::string& listFile) {
