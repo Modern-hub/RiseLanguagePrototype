@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AST\ASTNode.cpp" />
+    <ClCompile Include="CodeGenerator\CodeGenerator.cpp" />
     <ClCompile Include="Lexer\Lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser\Parser.cpp" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="AST\AST.h" />
     <ClInclude Include="AST\ASTNode.h" />
+    <ClInclude Include="CodeGenerator\CodeGenerator.h" />
     <ClInclude Include="Lexer\Lexer.h" />
     <ClInclude Include="Lexer\Token.h" />
     <ClInclude Include="Parser\Parser.h" />
