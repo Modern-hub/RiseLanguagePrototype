@@ -54,7 +54,7 @@
     <ClCompile Include="Parser\Parser.cpp">
       <Filter>CompilerPrototype\Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\main.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>CompilerPrototype</Filter>
     </ClCompile>
   </ItemGroup>
