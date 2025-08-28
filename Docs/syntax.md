@@ -22,3 +22,26 @@ func <return_type> <function_name>(<parameters>) {
     // ciało funkcji
 }
 ```
+
+### Przyklady
+```rise
+func int32_t add(int32 x, int32 y) {
+    return 0; // default
+}
+
+func void add(int32 x, int32 y) {
+    return; // early exit (default none)
+}
+
+func bool add(int32 x, int32 y) {
+    return false/true // default retun false;
+}
+```
+
+### Types
+typy w rise
+```
+int8 = 127 (0.5 byte)
+uint = 255 (1 byte)
+
+```
