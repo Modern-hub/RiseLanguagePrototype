@@ -129,9 +129,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="AST\ASTNode.cpp" />
     <ClCompile Include="Lexer\Lexer.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser\Parser.cpp" />
   </ItemGroup>
   <ItemGroup>
