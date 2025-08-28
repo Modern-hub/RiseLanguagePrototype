@@ -57,6 +57,9 @@
     <ClCompile Include="main.cpp">
       <Filter>CompilerPrototype</Filter>
     </ClCompile>
+    <ClCompile Include="CodeGenerator\CodeGenerator.cpp">
+      <Filter>CompilerPrototype\CodeGenerator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lexer\Lexer.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="AST\AST.h">
       <Filter>CompilerPrototype\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenerator\CodeGenerator.h">
+      <Filter>CompilerPrototype\CodeGenerator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
