@@ -129,10 +129,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\main.cpp" />
     <ClCompile Include="AST\ASTNode.cpp" />
     <ClCompile Include="Lexer\Lexer.cpp" />
     <ClCompile Include="Parser\Parser.cpp" />
-    <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\AST.h" />
@@ -140,6 +140,9 @@
     <ClInclude Include="Lexer\Lexer.h" />
     <ClInclude Include="Lexer\Token.h" />
     <ClInclude Include="Parser\Parser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\test.rise" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
