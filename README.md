@@ -36,3 +36,10 @@ RiseLanguagePrototype/
 └── 5. Docs/
      └── Language specification, design docs, tutorials
 ```
+
+# Project Road Map
+## Phase 1: Project Setup & Build System
+ Set up C++20 toolchain (GCC, Clang, or MSVC)
+ - [x] Basic working main.cpp
+ - [ ] Configure CMake or preferred build system
+ - [ ] Add basic CLI interface (risec <source.rise>)
