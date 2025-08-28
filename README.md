@@ -12,7 +12,7 @@ A high-performance programming language aiming to beat C++ in execution speed by
 - Document language specifications and design decisions clearly.
 
 ## Project Structure
-
+```md
 RiseLanguagePrototype/
 ├── 1. Source/
 │    └── Programs written in Rise language syntax
@@ -35,3 +35,4 @@ RiseLanguagePrototype/
 │
 └── 5. Docs/
      └── Language specification, design docs, tutorials
+```
