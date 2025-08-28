@@ -4,12 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "../CompilerPrototype/Lexer/Lexer.h"
-#include "../CompilerPrototype/Parser/Parser.h"
-#include "../CompilerPrototype/AST/AST.h"
-#include "../CompilerPrototype/CodeGenerator/CodeGenerator.h"
+#include "Lexer/Lexer.h"
+#include "Parser/Parser.h"
+#include "AST/AST.h"
+#include "CodeGenerator/CodeGenerator.h"
 
-// Wczytaj pliki z listy
 std::vector<std::string> readSourcesList(const std::string& listFile) {
     std::ifstream file(listFile);
     std::vector<std::string> sources;
@@ -27,82 +26,71 @@ std::vector<std::string> readSourcesList(const std::string& listFile) {
 
 std::string readFileToString(const std::string& filename) {
     std::ifstream file(filename);
-    if (!file) {
-        return "";
-    }
+    if (!file) return "";
     std::stringstream buffer;
     buffer << file.rdbuf();
     return buffer.str();
 }
 
-// Prosty "interpreter" tylko dla CallExpr displayConsole
-void interpret(const ASTNode* node) {
-    if (auto call = dynamic_cast<const CallExpr*>(node)) {
-        if (call->callee == "displayConsole" && call->args.size() == 1) {
-            if (auto strArg = dynamic_cast<const StringExpr*>(call->args[0].get())) {
-                std::cout << strArg->value << std::endl;
-            }
-            else {
-                std::cerr << "displayConsole expects a string argument\n";
-            }
-        }
-        else {
-            std::cerr << "Unknown function or wrong arguments\n";
-        }
-    }
-    else {
-        std::cerr << "Unsupported AST node for interpretation\n";
-    }
-}
-
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: CompilerPrototype <source.rise>\n";
+        std::cerr << "Usage: CompilerPrototype <sources_list.txt>\n";
         return 1;
     }
 
-    std::string sourceFile = argv[1];
-
-    std::string code = readFileToString(sourceFile);
-    if (code.empty()) {
-        std::cerr << "Cannot read source file: " << sourceFile << "\n";
+    auto sources = readSourcesList(argv[1]);
+    if (sources.empty()) {
+        std::cerr << "No source files found in list.\n";
         return 1;
     }
 
-    Lexer lexer(code);
-    Parser parser(lexer);
+    int fileIndex = 0;
+    for (const auto& sourceFile : sources) {
+        std::cout << "Processing: " << sourceFile << std::endl;
+        std::string code = readFileToString(sourceFile);
+        if (code.empty()) {
+            std::cerr << "Cannot read source file: " << sourceFile << std::endl;
+            continue;
+        }
 
-    auto ast = parser.parseExpression();
-    if (!ast) {
-        std::cerr << "Parsing failed\n";
-        return 1;
-    }
+        Lexer lexer(code);
+        Parser parser(lexer);
 
-    ast->print();
+        auto ast = parser.parseExpression();
+        if (!ast) {
+            std::cerr << "Parsing failed for file: " << sourceFile << std::endl;
+            continue;
+        }
 
-    std::string generatedCode = generateCppCode(ast.get());
+        ast->print();
 
-    // Zapisz do pliku
-    std::ofstream outFile("generated.cpp");
-    outFile << generatedCode;
-    outFile.close();
+        std::string generatedCpp = generateCppCode(ast.get());
 
-    // Kompiluj generated.cpp do exe
-    int buildResult = system("g++ -std=c++20 generated.cpp -o output.exe");
-    if (buildResult != 0) {
-        std::cerr << "Compilation of generated.cpp failed\n";
-        return 1;
-    }
+        // Unikalna nazwa pliku cpp i exe
+        std::string cppFile = "generated_" + std::to_string(fileIndex) + ".cpp";
+        std::string exeFile = "output_" + std::to_string(fileIndex) + ".exe";
 
-    std::cout << "Compilation succeeded. Running output.exe\n";
+        std::ofstream outFile(cppFile);
+        outFile << generatedCpp;
+        outFile.close();
 
-    int runResult = system("output.exe");
-    if (runResult != 0) {
-        std::cerr << "Execution failed\n";
-        return 1;
+        // Kompiluj
+        std::string compileCmd = "g++ -std=c++20 " + cppFile + " -o " + exeFile;
+        int compileRes = system(compileCmd.c_str());
+        if (compileRes != 0) {
+            std::cerr << "Compilation failed for " << cppFile << std::endl;
+            continue;
+        }
+
+        // Uruchom
+        std::cout << "Running " << exeFile << ":\n";
+        int runRes = system(exeFile.c_str());
+        if (runRes != 0) {
+            std::cerr << "Execution failed for " << exeFile << std::endl;
+        }
+
+        ++fileIndex;
     }
 
     return 0;
 }
-
-
