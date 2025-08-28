@@ -7,6 +7,7 @@
 #include "../CompilerPrototype/Lexer/Lexer.h"
 #include "../CompilerPrototype/Parser/Parser.h"
 #include "../CompilerPrototype/AST/AST.h"
+#include "../CompilerPrototype/CodeGenerator/CodeGenerator.h"
 
 // Wczytaj pliki z listy
 std::vector<std::string> readSourcesList(const std::string& listFile) {
@@ -56,43 +57,52 @@ void interpret(const ASTNode* node) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: RiseCompiler <sources_list.txt>\n";
+        std::cerr << "Usage: CompilerPrototype <source.rise>\n";
         return 1;
     }
 
-    std::string listFile = argv[1];
-    auto sources = readSourcesList(listFile);
+    std::string sourceFile = argv[1];
 
-    if (sources.empty()) {
-        std::cerr << "No source files listed in " << listFile << "\n";
+    std::string code = readFileToString(sourceFile);
+    if (code.empty()) {
+        std::cerr << "Cannot read source file: " << sourceFile << "\n";
         return 1;
     }
 
-    for (const auto& sourceFile : sources) {
-        std::string code = readFileToString(sourceFile);
-        if (code.empty()) {
-            std::cerr << "Error: Cannot open or empty source file: " << sourceFile << "\n";
-            continue;
-        }
-        std::cout << "Processing file: " << sourceFile << "\n";
+    Lexer lexer(code);
+    Parser parser(lexer);
 
-        Lexer lexer(code);
-        Parser parser(lexer);
-
-        auto ast = parser.parseExpression();
-        if (!ast) {
-            std::cerr << "Parsing failed for file: " << sourceFile << "\n";
-            continue;
-        }
-
-        ast->print();
-        interpret(ast.get());
+    auto ast = parser.parseExpression();
+    if (!ast) {
+        std::cerr << "Parsing failed\n";
+        return 1;
     }
 
-    std::cout << "All files processed.\n";
-    std::cout << "Press Enter to exit...\n";
-    std::cin.get();
+    ast->print();
+
+    std::string generatedCode = generateCppCode(ast.get());
+
+    // Zapisz do pliku
+    std::ofstream outFile("generated.cpp");
+    outFile << generatedCode;
+    outFile.close();
+
+    // Kompiluj generated.cpp do exe
+    int buildResult = system("g++ -std=c++20 generated.cpp -o output.exe");
+    if (buildResult != 0) {
+        std::cerr << "Compilation of generated.cpp failed\n";
+        return 1;
+    }
+
+    std::cout << "Compilation succeeded. Running output.exe\n";
+
+    int runResult = system("output.exe");
+    if (runResult != 0) {
+        std::cerr << "Execution failed\n";
+        return 1;
+    }
 
     return 0;
 }
+
 
